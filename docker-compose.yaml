@@ -42,6 +42,7 @@ services:
     #  - elasticsearch
 
   my-process: # Dein Prozess-Service
+    build: .
     image: my-process-image # Hier das Image deiner JAR-Datei
     container_name: c8-experiment
     environment:
