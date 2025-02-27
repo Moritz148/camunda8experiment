@@ -1,13 +1,9 @@
 package io.camunda.demo.process_payments;
 
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import io.camunda.zeebe.spring.client.annotation.JobWorker;
-import io.camunda.zeebe.spring.client.annotation.Variable;
 
 @Component
 public class ChargeCreditCardWorker {

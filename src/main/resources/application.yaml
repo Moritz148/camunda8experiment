@@ -3,5 +3,4 @@ camunda:
     mode: self-managed
     zeebe:
       enabled: true
-      grpc-address: http://127.0.0.1:26500
-      rest-address: http://127.0.0.1:8080
+      grpc-address: http://zeebe:26500
