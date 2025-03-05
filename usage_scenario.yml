@@ -5,13 +5,12 @@ description: usage_scenario for camunda8experiment
 compose-file: !include docker-compose.yaml
 
 services:
-    camunda8exp:
-        image: moritz148/my-process-image:v2
-        command: /bin/sh
+  my-process:
+    command: /bin/sh
 
 flow:
     - name: run Experiment
-      container: my-process-image
+      container: my-process
       commands:
       - type: console
         command: java -jar demo.jar
