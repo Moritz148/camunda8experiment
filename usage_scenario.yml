@@ -1,0 +1,19 @@
+name: camunda8experiment
+author: Moritz Schwarz <moritz.schwarz@envite.de>
+description: usage_scenario for camunda8experiment
+
+compose-file: !include docker-compose.yaml
+
+services:
+    camunda8exp:
+        image: my-process-image
+        command: /bin/sh
+
+flow:
+    - name: run Experiment
+      container: my-process-image
+      commands:
+      - type: console
+        command: java -jar demo.jar
+        log-stdout: true
+        log-stderr: true

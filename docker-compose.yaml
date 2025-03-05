@@ -43,16 +43,17 @@ services:
 
   my-process: # Dein Prozess-Service
     #build: .
-    image: moritz148/my-process-image # Hier das Image deiner JAR-Datei
+    image: my-process-image # Hier das Image deiner JAR-Datei
     container_name: c8-experiment
     environment:
       - ZEEBE_GATEWAY_ADDRESS=zeebe:26500  # Verbindung zur Zeebe-Engine
     networks:
       - camunda-platform  # Das gleiche Netzwerk wie Zeebe
     depends_on:
+      # Warte, bis Zeebe verfügbar ist
       zeebe:
         condition: service_healthy
-        # Warte, bis Zeebe verfügbar ist
+
 volumes:
   zeebe:
   elastic:
