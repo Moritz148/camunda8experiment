@@ -6,7 +6,7 @@ compose-file: !include docker-compose.yaml
 
 services:
     camunda8exp:
-        image: moritz148/my-process-image:v1
+        image: moritz148/my-process-image:v2
         command: /bin/sh
 
 flow:

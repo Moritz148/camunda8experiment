@@ -27,6 +27,8 @@ services:
       - ZEEBE_BROKER_DATA_DISKUSAGECOMMANDWATERMARK=0.998
       - ZEEBE_BROKER_DATA_DISKUSAGEREPLICATIONWATERMARK=0.999
       - "JAVA_TOOL_OPTIONS=-Xms512m -Xmx512m"
+    env_file:
+      - .env
     restart: unless-stopped
     healthcheck:
       test: [ "CMD-SHELL", "timeout 10s bash -c ':> /dev/tcp/127.0.0.1/9600' || exit 1" ]
@@ -43,7 +45,7 @@ services:
 
   my-process: # Dein Prozess-Service
     #build: .
-    image: moritz148/my-process-image:v1 # Hier das Image deiner JAR-Datei
+    image: moritz148/my-process-image:v2 # Hier das Image deiner JAR-Datei
     container_name: c8-experiment
     environment:
       - ZEEBE_GATEWAY_ADDRESS=zeebe:26500  # Verbindung zur Zeebe-Engine
@@ -54,10 +56,10 @@ services:
       zeebe:
         condition: service_healthy
 
-#volumes:
-#  zeebe:
-#  elastic:
-#  kibana:
+  volumes:
+    zeebe:
+    elastic:
+    kibana:
 
 networks:
   camunda-platform:
