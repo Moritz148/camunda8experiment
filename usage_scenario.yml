@@ -10,7 +10,7 @@ services:
 
 flow:
     - name: run Experiment
-      container: my-process
+      container: c8-experiment
       commands:
       - type: console
         command: java -jar demo.jar
