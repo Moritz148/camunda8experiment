@@ -54,10 +54,10 @@ services:
       zeebe:
         condition: service_healthy
 
-volumes:
-  zeebe:
-  elastic:
-  kibana:
+#volumes:
+#  zeebe:
+#  elastic:
+#  kibana:
 
 networks:
   camunda-platform:
