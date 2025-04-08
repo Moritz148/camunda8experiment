@@ -51,6 +51,7 @@ services:
   my-process: # Dein Prozess-Service
     #build: .
     image: moritz148/my-process-image:latest # Hier das Image deiner JAR-Datei
+#    image: moritz148/my-process-image:testv2
     container_name: c8-experiment
     environment:
       - ZEEBE_GATEWAY_ADDRESS=zeebe:26500  # Verbindung zur Zeebe-Engine
