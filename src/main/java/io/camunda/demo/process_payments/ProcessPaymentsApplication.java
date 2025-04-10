@@ -43,13 +43,13 @@ public class ProcessPaymentsApplication implements CommandLineRunner {
 		var bpmnProcessId = "typical-process";
 		//erzeugen von 100 Prozessinstanzen
 		for (int i = 1; i <= 100; i++) {
+			LOG.info("Instance #" + i + " startet jetzt.");
 			var event = zeebeClient.newCreateInstanceCommand()
 					.bpmnProcessId(bpmnProcessId)
 					.latestVersion()
 					.withResult()
 					.send()
 					.join();
-
 			LOG.info("Instance #" + i + " DONE");
 		}
 
