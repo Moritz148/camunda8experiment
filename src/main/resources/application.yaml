@@ -4,3 +4,7 @@ camunda:
     zeebe:
       enabled: true
       grpc-address: http://zeebe:26500
+
+logging:
+  level:
+    root: OFF
