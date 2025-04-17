@@ -1,11 +1,5 @@
 package io.camunda.demo.process_payments;
 
-import io.camunda.zeebe.client.ZeebeClientBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-//import io.camunda.zeebe.broker.*;
-import io.camunda.zeebe.engine.processing.processinstance.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,11 +7,12 @@ import io.camunda.zeebe.client.ZeebeClient;
 import io.camunda.zeebe.spring.client.annotation.Deployment;
 import org.springframework.context.ConfigurableApplicationContext;
 
-@SpringBootApplication
-@Deployment(resources = "classpath:typical_process.bpmn")
-public class ProcessPaymentsApplication implements CommandLineRunner {
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-	private static final Logger LOG = LoggerFactory.getLogger(ProcessPaymentsApplication.class);
+@SpringBootApplication
+@Deployment(resources = "classpath:C8_single.bpmn")
+public class Application implements CommandLineRunner {
 
 	private ZeebeClient zeebeClient = ZeebeClient.newClientBuilder()
 			.gatewayAddress("zeebe:26500")
@@ -26,7 +21,7 @@ public class ProcessPaymentsApplication implements CommandLineRunner {
 
 	public static void main(String[] args) {
 		//Spring-Application starten
-		ConfigurableApplicationContext ctx = SpringApplication.run(ProcessPaymentsApplication.class, args);
+		ConfigurableApplicationContext ctx = SpringApplication.run(Application.class, args);
 
 		//Spring-Application schließen
 		ctx.close();
@@ -36,27 +31,28 @@ public class ProcessPaymentsApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 
 		if(zeebeClient == null){
-			LOG.info("Zeebe client not set");
+			System.out.println("Zeebe client not set");
 			return;
 		}
 
-		var bpmnProcessId = "typical-process";
+		var bpmnProcessId = "C8_single";
 
 		//Variable zum ändern der Anzahl der zu startenden Prozessinstanzen
 		int numberOfInstances = 100;
 
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+
 		for (int i = 1; i <= numberOfInstances; i++) {
-			var event = zeebeClient.newCreateInstanceCommand()
+			String timestampStarted = LocalDateTime.now().format(formatter);
+			System.out.println("Instance #" + i + " STARTED - " + timestampStarted);
+			zeebeClient.newCreateInstanceCommand()
 					.bpmnProcessId(bpmnProcessId)
 					.latestVersion()
 					.withResult()
 					.send()
 					.join();
-
-			LOG.info("Instance #" + i + " DONE");
+			String timestampEnded = LocalDateTime.now().format(formatter);
+			System.out.println("Instance #" + i + " DONE - " + timestampEnded);
 		}
-
-
 	}
-
 }
