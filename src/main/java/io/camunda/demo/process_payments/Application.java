@@ -44,16 +44,20 @@ public class Application implements CommandLineRunner {
 
 		for (int i = 1; i <= numberOfInstances; i++) {
 			String timestampStarted = LocalDateTime.now().format(formatter);
-
-			System.out.println("Instance #" + i + " STARTED - " + timestampStarted);
-			zeebeClient.newCreateInstanceCommand()
-					.bpmnProcessId(bpmnProcessId)
-					.latestVersion()
-					.withResult()
-					.send()
-					.join();
+			if (i == 1) {
+				System.out.println("Instance #" + i + " STARTED - " + timestampStarted);
+			} else {
+				zeebeClient.newCreateInstanceCommand()
+						.bpmnProcessId(bpmnProcessId)
+						.latestVersion()
+						.withResult()
+						.send()
+						.join();
+			}
 			String timestampEnded = LocalDateTime.now().format(formatter);
-			System.out.println("Instance #" + i + " DONE - " + timestampEnded);
+			if(i == numberOfInstances) {
+				System.out.println("Instance #" + i + " DONE - " + timestampEnded);
+			}
 		}
 	}
 
