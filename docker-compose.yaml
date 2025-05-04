@@ -18,7 +18,7 @@ services:
       - ZEEBE_BROKER_DATA_DISKUSAGECOMMANDWATERMARK=0.998
       - ZEEBE_BROKER_DATA_DISKUSAGEREPLICATIONWATERMARK=0.999
       - "JAVA_TOOL_OPTIONS=-Xms512m -Xmx512m"
-    restart: unless-stopped
+    restart: "unless-stopped"
     healthcheck:
       test: [ "CMD-SHELL", "timeout 10s bash -c ':> /dev/tcp/127.0.0.1/9600' || exit 1" ]
       interval: 30s
@@ -35,6 +35,7 @@ services:
       - ZEEBE_GATEWAY_ADDRESS=zeebe:26500  # Verbindung zur Zeebe-Engine
     networks:
       - camunda-platform  # Das gleiche Netzwerk wie Zeebe
+    restart: "no"
     depends_on:
       zeebe:
         condition: service_healthy
