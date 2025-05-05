@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 public class Application implements CommandLineRunner {
 
 	private ZeebeClient zeebeClient = ZeebeClient.newClientBuilder()
-			.gatewayAddress("zeebe:26500")
+			.gatewayAddress("engine:26500")
 			.usePlaintext()
 			.build();
 
