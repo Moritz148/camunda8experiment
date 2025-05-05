@@ -11,9 +11,9 @@
 
 services:
 
-  zeebe: # https://docs.camunda.io/docs/self-managed/platform-deployment/docker/#zeebe
+  engine: # https://docs.camunda.io/docs/self-managed/platform-deployment/docker/#zeebe
     image: camunda/zeebe:8.6.9
-    container_name: zeebe
+    container_name: engine
     environment: # https://docs.camunda.io/docs/self-managed/zeebe-deployment/configuration/environment-variables/
       - ZEEBE_BROKER_DATA_DISKUSAGECOMMANDWATERMARK=0.998
       - ZEEBE_BROKER_DATA_DISKUSAGEREPLICATIONWATERMARK=0.999
@@ -28,16 +28,16 @@ services:
     networks:
       - camunda-platform
 
-  my-process: # Dein Prozess-Service
-    container_name: c8-experiment
+  experiment: # Dein Prozess-Service
+    container_name: experiment
     image: moritz148/camunda8experiment:single # Hier das Image deiner JAR-Datei
     environment:
-      - ZEEBE_GATEWAY_ADDRESS=zeebe:26500  # Verbindung zur Zeebe-Engine
+      - ZEEBE_GATEWAY_ADDRESS=engine:26500  # Verbindung zur Zeebe-Engine
     networks:
       - camunda-platform  # Das gleiche Netzwerk wie Zeebe
     restart: "no"
     depends_on:
-      zeebe:
+      engine:
         condition: service_healthy
 
 networks:

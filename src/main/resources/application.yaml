@@ -3,7 +3,7 @@ camunda:
     mode: self-managed
     zeebe:
       enabled: true
-      grpc-address: http://zeebe:26500
+      grpc-address: http://engine:26500
 
 logging:
   level:
