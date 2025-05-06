@@ -19,7 +19,7 @@ services:
       - "JAVA_TOOL_OPTIONS=-Xms512m -Xmx512m"
     restart: "unless-stopped"
     healthcheck:
-      test: [ "CMD-SHELL", "timeout 10s bash -c ':> /dev/tcp/127.0.0.1/9600' || exit 1" ]
+      test: [ "CMD-SHELL", "timeout 20s bash -c ':> /dev/tcp/127.0.0.1/9600' || exit 1" ]
       interval: 30s
       timeout: 5s
       retries: 5
@@ -28,7 +28,7 @@ services:
       - camunda-platform
 
   experiment: # Dein Prozess-Service
-    image: moritz148/camunda8experiment:benchmark # Hier das Image deiner JAR-Datei
+    image: moritz148/camunda8experiment:complex-long # Hier das Image deiner JAR-Datei
     container_name: experiment
     environment:
       - ZEEBE_GATEWAY_ADDRESS=engine:26500  # Verbindung zur Zeebe-Engine

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @SpringBootApplication
-@Deployment(resources = "classpath:C8_benchmark.bpmn")
+@Deployment(resources = "classpath:C8_complex_long.bpmn")
 public class Application implements CommandLineRunner {
 
 	private final ZeebeClient zeebeClient = ZeebeClient.newClientBuilder()
@@ -35,7 +35,7 @@ public class Application implements CommandLineRunner {
 			return;
 		}
 
-		var bpmnProcessId = "C8_benchmark";
+		var bpmnProcessId = "C8_complex-long";
 
 		//Variable zum ändern der Anzahl der zu startenden Prozessinstanzen
 		int numberOfInstances = 100;

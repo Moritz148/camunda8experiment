@@ -6,55 +6,80 @@ import io.camunda.zeebe.spring.client.annotation.JobWorker;
 @Component
 public class ExternalTaskWorker {
 
-    @JobWorker(type = "testing1")
+    @JobWorker(type = "task1")
     public void dummyWorker1() {
 //        LOG.info("dummyWorker1  ---  Done");
     }
 
-    @JobWorker(type = "testing2")
-    public void dummyWorker2() {
-//        LOG.info("dummyWorker2  ---  Done");
-    }
+    @JobWorker(type = "task2")
+    public void dummyWorker2() {}
 
-    @JobWorker(type = "testing3")
-    public void dummyWorker3() {
-//        LOG.info("dummyWorker3  ---  Done");
-    }
+    @JobWorker(type = "task3")
+    public void dummyWorker3() {}
 
-    @JobWorker(type = "testing4")
-    public void dummyWorker4() {
-//        LOG.info("dummyWorker4  ---  Done");
-    }
+    @JobWorker(type = "task4")
+    public void dummyWorker4() {}
 
-    @JobWorker(type = "testing5")
-    public void dummyWorker5() {
-//        LOG.info("dummyWorker5  ---  Done");
-    }
+    @JobWorker(type = "task5")
+    public void dummyWorker5() {}
 
-    @JobWorker(type = "testing6")
-    public void dummyWorker6() {
-//        LOG.info("dummyWorker6  ---  Done");
-    }
+    @JobWorker(type = "task6")
+    public void dummyWorker6() {}
 
-    @JobWorker(type = "testing7")
-    public void dummyWorker7() {
-//        LOG.info("dummyWorker7  ---  Done");
-    }
+    @JobWorker(type = "task7")
+    public void dummyWorker7() {}
 
-    @JobWorker(type = "testing8")
-    public void dummyWorker8() {
-//        LOG.info("dummyWorker8 ---  Done");
-    }
+    @JobWorker(type = "task8")
+    public void dummyWorker8() {}
 
-    @JobWorker(type = "testing9")
-    public void dummyWorker9() {
-//        LOG.info("dummyWorker9  ---  Done");
-    }
+    @JobWorker(type = "task9")
+    public void dummyWorker9() {}
 
-    @JobWorker(type = "testing10")
-    public void dummyWorker10() {
-//        LOG.info("dummyWorker10  ---  Done");
-    }
+    @JobWorker(type = "task10")
+    public void dummyWorker10() {}
+
+    @JobWorker(type = "task11")
+    public void dummyWorker11() {}
+
+    @JobWorker(type = "task12")
+    public void dummyWorker12() {}
+
+    @JobWorker(type = "task13")
+    public void dummyWorker13() {}
+
+    @JobWorker(type = "task14")
+    public void dummyWorker14() {}
+
+    @JobWorker(type = "task15")
+    public void dummyWorker15() {}
+
+    @JobWorker(type = "task16")
+    public void dummyWorker16() {}
+
+    @JobWorker(type = "task17")
+    public void dummyWorker17() {}
+
+    @JobWorker(type = "task18")
+    public void dummyWorker18() {}
+
+    @JobWorker(type = "task19")
+    public void dummyWorker19() {}
+
+    @JobWorker(type = "task20")
+    public void dummyWorker20() {}
+
+    @JobWorker(type = "task21")
+    public void dummyWorker21() {}
+
+    @JobWorker(type = "task22")
+    public void dummyWorker22() {}
+
+    @JobWorker(type = "task23")
+    public void dummyWorker23() {}
+
+    @JobWorker(type = "task24")
+    public void dummyWorker24() {}
+
 
 }
 
