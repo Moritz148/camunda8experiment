@@ -54,8 +54,9 @@ public class Application implements CommandLineRunner {
                         .send()
                         .join();
             }
-			String timestampEnded = LocalDateTime.now().format(formatter);
+
 			if(i == numberOfInstances) {
+				String timestampEnded = LocalDateTime.now().format(formatter);
 				System.out.println("Instance #" + i + " DONE - " + timestampEnded);
 			}
 		}
