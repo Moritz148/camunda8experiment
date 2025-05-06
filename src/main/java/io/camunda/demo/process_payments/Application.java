@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 @Deployment(resources = "classpath:C8_benchmark.bpmn")
 public class Application implements CommandLineRunner {
 
-	private ZeebeClient zeebeClient = ZeebeClient.newClientBuilder()
+	private final ZeebeClient zeebeClient = ZeebeClient.newClientBuilder()
 			.gatewayAddress("engine:26500")
 			.usePlaintext()
 			.build();

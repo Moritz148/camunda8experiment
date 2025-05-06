@@ -31,7 +31,7 @@ services:
     image: moritz148/camunda8experiment:benchmark # Hier das Image deiner JAR-Datei
     container_name: experiment
     environment:
-      - ZEEBE_GATEWAY_ADDRESS=zeebe:26500  # Verbindung zur Zeebe-Engine
+      - ZEEBE_GATEWAY_ADDRESS=engine:26500  # Verbindung zur Zeebe-Engine
     networks:
       - camunda-platform  # Das gleiche Netzwerk wie Zeebe
     restart: "no"
