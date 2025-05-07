@@ -43,8 +43,8 @@ public class Application implements CommandLineRunner {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
 
 		for (int i = 1; i <= numberOfInstances; i++) {
-			String timestampStarted = LocalDateTime.now().format(formatter);
 			if (i == 1) {
+				String timestampStarted = LocalDateTime.now().format(formatter);
 				System.out.println("Instance #" + i + " STARTED - " + timestampStarted);
 			} else {
 				zeebeClient.newCreateInstanceCommand()
@@ -54,12 +54,10 @@ public class Application implements CommandLineRunner {
 						.send()
 						.join();
 			}
-
 			if(i == numberOfInstances) {
 				String timestampEnded = LocalDateTime.now().format(formatter);
 				System.out.println("Instance #" + i + " DONE - " + timestampEnded);
 			}
 		}
 	}
-
 }
