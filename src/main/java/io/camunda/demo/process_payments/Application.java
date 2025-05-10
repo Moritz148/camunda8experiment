@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @SpringBootApplication
-@Deployment(resources = "classpath:C8_complex_long.bpmn")
+@Deployment(resources = "classpath:C8_complex-long.bpmn")
 public class Application implements CommandLineRunner {
 
 	private final ZeebeClient zeebeClient = ZeebeClient.newClientBuilder()

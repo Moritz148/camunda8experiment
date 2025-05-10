@@ -79,8 +79,6 @@ public class ExternalTaskWorker {
 
     @JobWorker(type = "task24")
     public void dummyWorker24() {}
-
-
 }
 
 
