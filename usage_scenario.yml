@@ -9,8 +9,8 @@ services:
     command: /bin/sh
 
 flow:
-    - name: c8-experiment
-      container: c8-experiment
+    - name: c8-experiment_new
+      container: c8-experiment_new
       commands:
       - type: console
         command: java -jar demo.jar

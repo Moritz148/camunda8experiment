@@ -2,8 +2,8 @@
 
 services:
 
-  c8-experiment:
-      container_name: c8-experiment
+  c8-experiment_new:
+      container_name: c8-experiment_new
       image: moritz148/multiple-broker:test
       environment:
         - CAMUNDA_CLIENT_MODE=self-managed
@@ -203,7 +203,6 @@ volumes:
   zeebe0:
   zeebe1:
   zeebe2:
-  elastic:
 
 networks:
   camunda-platform:
