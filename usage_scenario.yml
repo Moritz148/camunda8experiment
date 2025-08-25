@@ -2,7 +2,7 @@ name: camunda8experiment
 author: Moritz Schwarz <moritz.schwarz@envite.de>
 description: usage_scenario for camunda8experiment
 
-compose-file: !include docker-compose.yaml
+compose-file: !include docker-compose-measurement.yaml
 
 services:
   my-process:
