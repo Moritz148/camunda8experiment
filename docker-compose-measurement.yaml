@@ -1,0 +1,209 @@
+# Docker Compose von BA mit mehreren Brokern und einem Standalone Gateway
+
+services:
+
+  c8-experiment:
+      container_name: c8-experiment
+      image: moritz148/multiple-broker:test
+      environment:
+        - CAMUNDA_CLIENT_MODE=self-managed
+        - CAMUNDA_CLIENT_ZEEBE_GRPCADDRESS=http://zeebe-gateway:26500
+        # Falls du das Zeebe REST Gateway aktiv und gemappt hast, dann:
+        # - CAMUNDA_CLIENT_ZEEBE_RESTADDRESS=http://zeebe-gateway:8080
+        - LOGGING_LEVEL_ROOT=INFO
+        - ZEEBE_CLIENT_SECURITY_PLAINTEXT=true
+        - ZEEBE_CLIENT_CLOUD_ENABLED=false
+        - LOGGING_LEVEL_IO_CAMUNDA_ZEEBE_CLIENT_IMPL=ERROR
+      depends_on:
+        zeebe2:
+          condition: service_healthy
+
+      restart: "no"
+      networks:
+        - camunda-platform
+
+  zeebe0: # https://docs.camunda.io/docs/self-managed/platform-deployment/docker/#zeebe
+    #    image: camunda/zeebe:${CAMUNDA_ZEEBE_VERSION}
+    image: camunda/zeebe:8.7.8
+    container_name: zeebe0
+    #    volumes:
+    #      - ./config/zeebe/broker-0.yaml:/usr/local/zeebe/config/application.yaml:ro
+    #      - zeebe0:/usr/local/zeebe/data
+    environment:
+      - ZEEBE_LOG_LEVEL=info
+      - ZEEBE_BROKER_GATEWAY_ENABLE=false
+      - ZEEBE_BROKER_NETWORK_HOST=0.0.0.0
+      - ZEEBE_BROKER_NETWORK_ADVERTISEDHOST=zeebe0
+      - ZEEBE_BROKER_NETWORK_COMMANDAPI_PORT=26501
+      - ZEEBE_BROKER_NETWORK_INTERNALAPI_PORT=26502
+      - ZEEBE_BROKER_NETWORK_MONITORINGAPI_PORT=9600
+      - ZEEBE_BROKER_CLUSTER_CLUSTERNAME=zeebe-cluster
+      - ZEEBE_BROKER_CLUSTER_CLUSTERSIZE=3
+      - ZEEBE_BROKER_CLUSTER_PARTITIONSCOUNT=3
+      - ZEEBE_BROKER_CLUSTER_REPLICATIONFACTOR=3
+      - ZEEBE_BROKER_CLUSTER_NODEID=0
+      - ZEEBE_BROKER_CLUSTER_INITIALCONTACTPOINTS=zeebe0:26502,zeebe1:26502,zeebe2:26502
+      - ZEEBE_BROKER_DATA_SNAPSHOTPERIOD=30m
+      - ZEEBE_BROKER_DATA_DISKUSAGECOMMANDWATERMARK=0.998
+      - ZEEBE_BROKER_DATA_DISKUSAGEREPLICATIONWATERMARK=0.999
+      - ZEEBE_BROKER_THREADS_CPUTHREADCOUNT=2
+      - ZEEBE_BROKER_THREADS_IOTHREADCOUNT=2
+      - "JAVA_TOOL_OPTIONS=-Xms512m -Xmx512m"
+    restart: unless-stopped
+    #    healthcheck:
+    #      test: [ "CMD-SHELL", "bash -lc 'echo > /dev/tcp/127.0.0.1/8080'" ]
+    #      interval: 15s
+    #      timeout: 5s
+    #      retries: 20
+    #      start_period: 120s
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 10s bash -c ':> /dev/tcp/127.0.0.1/9600' || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 120s
+
+    networks:
+      - camunda-platform
+
+  zeebe1: # https://docs.camunda.io/docs/self-managed/platform-deployment/docker/#zeebe
+    #    image: camunda/zeebe:${CAMUNDA_ZEEBE_VERSION}
+    image: camunda/zeebe:8.7.8
+    container_name: zeebe1
+    environment:
+      - ZEEBE_LOG_LEVEL=info
+      - ZEEBE_BROKER_GATEWAY_ENABLE=false
+      - ZEEBE_BROKER_NETWORK_HOST=0.0.0.0
+      - ZEEBE_BROKER_NETWORK_ADVERTISEDHOST=zeebe1
+      - ZEEBE_BROKER_NETWORK_COMMANDAPI_PORT=26501
+      - ZEEBE_BROKER_NETWORK_INTERNALAPI_PORT=26502
+      - ZEEBE_BROKER_NETWORK_MONITORINGAPI_PORT=9601
+      - ZEEBE_BROKER_CLUSTER_CLUSTERNAME=zeebe-cluster
+      - ZEEBE_BROKER_CLUSTER_CLUSTERSIZE=3
+      - ZEEBE_BROKER_CLUSTER_PARTITIONSCOUNT=3
+      - ZEEBE_BROKER_CLUSTER_REPLICATIONFACTOR=3
+      - ZEEBE_BROKER_CLUSTER_NODEID=1
+      - ZEEBE_BROKER_CLUSTER_INITIALCONTACTPOINTS=zeebe0:26502,zeebe1:26502,zeebe2:26502
+      - ZEEBE_BROKER_DATA_SNAPSHOTPERIOD=30m
+      - ZEEBE_BROKER_DATA_DISKUSAGECOMMANDWATERMARK=0.998
+      - ZEEBE_BROKER_DATA_DISKUSAGEREPLICATIONWATERMARK=0.999
+      - ZEEBE_BROKER_THREADS_CPUTHREADCOUNT=2
+      - ZEEBE_BROKER_THREADS_IOTHREADCOUNT=2
+      - "JAVA_TOOL_OPTIONS=-Xms512m -Xmx512m"
+    restart: unless-stopped
+    #    healthcheck:
+    #      test: [ "CMD-SHELL", "bash -lc 'echo > /dev/tcp/127.0.0.1/8080'" ]
+    #      interval: 15s
+    #      timeout: 5s
+    #      retries: 20
+    #      start_period: 120s
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 10s bash -c ':> /dev/tcp/127.0.0.1/9600' || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 120s
+    depends_on:
+      - zeebe0
+    #    volumes:
+    #      - ./config/zeebe/broker-1.yaml:/usr/local/zeebe/config/application.yaml:ro
+    #      - zeebe1:/usr/local/zeebe/data
+    networks:
+      - camunda-platform
+
+  zeebe2: # https://docs.camunda.io/docs/self-managed/platform-deployment/docker/#zeebe
+    #    image: camunda/zeebe:${CAMUNDA_ZEEBE_VERSION}
+    image: camunda/zeebe:8.7.8
+    container_name: zeebe2
+    environment:
+      - ZEEBE_LOG_LEVEL=info
+      - ZEEBE_BROKER_GATEWAY_ENABLE=false
+      - ZEEBE_BROKER_NETWORK_HOST=0.0.0.0
+      - ZEEBE_BROKER_NETWORK_ADVERTISEDHOST=zeebe2
+      - ZEEBE_BROKER_NETWORK_COMMANDAPI_PORT=26501
+      - ZEEBE_BROKER_NETWORK_INTERNALAPI_PORT=26502
+      - ZEEBE_BROKER_NETWORK_MONITORINGAPI_PORT=9602
+      - ZEEBE_BROKER_CLUSTER_CLUSTERNAME=zeebe-cluster
+      - ZEEBE_BROKER_CLUSTER_CLUSTERSIZE=3
+      - ZEEBE_BROKER_CLUSTER_PARTITIONSCOUNT=3
+      - ZEEBE_BROKER_CLUSTER_REPLICATIONFACTOR=3
+      - ZEEBE_BROKER_CLUSTER_NODEID=2
+      - ZEEBE_BROKER_CLUSTER_INITIALCONTACTPOINTS=zeebe0:26502,zeebe1:26502,zeebe2:26502
+      - ZEEBE_BROKER_DATA_SNAPSHOTPERIOD=30m
+      - ZEEBE_BROKER_DATA_DISKUSAGECOMMANDWATERMARK=0.998
+      - ZEEBE_BROKER_DATA_DISKUSAGEREPLICATIONWATERMARK=0.999
+      - ZEEBE_BROKER_THREADS_CPUTHREADCOUNT=2
+      - ZEEBE_BROKER_THREADS_IOTHREADCOUNT=2
+      - "JAVA_TOOL_OPTIONS=-Xms512m -Xmx512m"
+    restart: unless-stopped
+    #    healthcheck:
+    #      test: [ "CMD-SHELL", "bash -lc 'echo > /dev/tcp/127.0.0.1/8080'" ]
+    #      interval: 15s
+    #      timeout: 5s
+    #      retries: 20
+    #      start_period: 120s
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 10s bash -c ':> /dev/tcp/127.0.0.1/9600' || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 120s
+    depends_on:
+      - zeebe1
+    #    volumes:
+    #      - ./config/zeebe/broker-2.yaml:/usr/local/zeebe/config/application.yaml:ro
+    #      - zeebe2:/usr/local/zeebe/data
+    networks:
+      - camunda-platform
+
+  # Standalone Zeebe Gateway
+  zeebe-gateway:
+    #    image: camunda/zeebe:${CAMUNDA_ZEEBE_VERSION}
+    image: camunda/zeebe:8.7.8
+    container_name: zeebe-gateway
+    command: ["/usr/local/bin/startup.sh", "--", "gateway"]
+
+    #    volumes:
+    #      - ./config/zeebe/gateway.yaml:/usr/local/zeebe/config/application.yaml:ro
+    ports:
+      - "26500:26500"   #gRPC for Clients
+      - "9600:9600"     #monitoring/health of gateway
+    environment:
+      - ZEEBE_GATEWAY_STANDALONE=true
+
+      # Logging
+      - ZEEBE_LOG_LEVEL=info
+
+      # gRPC Gateway für Clients
+      - ZEEBE_GATEWAY_NETWORK_HOST=0.0.0.0
+      - ZEEBE_GATEWAY_NETWORK_PORT=26500
+
+      # Cluster-Verbindung zu den Brokern (immer der interne Cluster-Port 26502!)
+      - ZEEBE_GATEWAY_CLUSTER_INITIALCONTACTPOINTS=zeebe0:26502,zeebe1:26502,zeebe2:26502
+      - ZEEBE_GATEWAY_CLUSTER_CLUSTERNAME=zeebe-cluster
+
+      # Security für lokale Entwicklung aus
+      - ZEEBE_GATEWAY_SECURITY_AUTHENTICATION_MODE=none
+
+      # Management/Monitoring
+      - ZEEBE_GATEWAY_MONITORING_ENABLED=true
+      - ZEEBE_GATEWAY_MONITORING_HOST=0.0.0.0
+      - ZEEBE_GATEWAY_MONITORING_PORT=9600
+
+    healthcheck:
+      test: [ "CMD-SHELL", "timeout 10s bash -c ':> /dev/tcp/127.0.0.1/9600' || exit 1" ]
+    depends_on:
+      - zeebe0
+      - zeebe1
+      - zeebe2
+    networks:
+      - camunda-platform
+
+volumes:
+  zeebe0:
+  zeebe1:
+  zeebe2:
+  elastic:
+
+networks:
+  camunda-platform:
