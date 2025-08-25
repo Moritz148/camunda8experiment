@@ -5,7 +5,7 @@ description: usage_scenario for camunda8experiment
 compose-file: !include docker-compose-measurement.yaml
 
 services:
-  my-process:
+  c8-experiment_new:
     command: /bin/sh
 
 flow:
