@@ -1,5 +1,6 @@
 package io.camunda.demo.process_payments;
 
+import io.camunda.zeebe.client.api.response.Topology;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -42,6 +43,20 @@ public class Application implements CommandLineRunner {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
 
+        final Topology topology = zeebeClient.newTopologyRequest().send().join();
+
+        System.out.println("Topology:");
+        topology
+                .getBrokers()
+                .forEach(
+                        b -> {
+                            System.out.println("    " + b.getAddress());
+                            b.getPartitions()
+                                    .forEach(
+                                            p ->
+                                                    System.out.println(
+                                                            "      " + p.getPartitionId() + " - " + p.getRole()));
+                        });
 		for (int i = 1; i <= numberOfInstances; i++) {
 			String timestampStarted = LocalDateTime.now().format(formatter);
 
@@ -52,6 +67,7 @@ public class Application implements CommandLineRunner {
 					.withResult()
 					.send()
 					.join();
+
 			String timestampEnded = LocalDateTime.now().format(formatter);
 			System.out.println("Instance #" + i + " DONE - " + timestampEnded);
 		}

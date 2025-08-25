@@ -1,34 +1,60 @@
 # Docker Compose von BA mit mehreren Brokern und einem Standalone Gateway
 
+# 13:09:10.007 Prozessinstanz #1 gestartet
+# 13:10:27.385 Prozessinstanz #100 beendet
+
+#13:13:49.260 Prozessinstanz #1 gestartet
+#13:14:48.530 Prozessinstanz #100 beendet
+
+
+
 services:
 
-  c8-experiment_new:
-      container_name: c8-experiment_new
-#      image: moritz148/multiple-broker:test
-      image: moritz148/multiple-broker:topology
-      environment:
-        - CAMUNDA_CLIENT_MODE=self-managed
-        - CAMUNDA_CLIENT_ZEEBE_GRPCADDRESS=http://zeebe-gateway:26500
-        # Falls du das Zeebe REST Gateway aktiv und gemappt hast, dann:
-        # - CAMUNDA_CLIENT_ZEEBE_RESTADDRESS=http://zeebe-gateway:8080
-        - LOGGING_LEVEL_ROOT=INFO
-        - ZEEBE_CLIENT_SECURITY_PLAINTEXT=true
-        - ZEEBE_CLIENT_CLOUD_ENABLED=false
-        - LOGGING_LEVEL_IO_CAMUNDA_ZEEBE_CLIENT_IMPL=ERROR
-      depends_on:
-        zeebe2:
-          condition: service_healthy
+  #  measurements-app:
+  #    image: moritz148/c8-3broker:new
+  #    environment:
+  #      - CAMUNDA_CLIENT_MODE=self-managed
+  #      - CAMUNDA_CLIENT_ZEEBE_GRPCADDRESS=http://zeebe-gateway:26500
+  #      # Falls du das Zeebe REST Gateway aktiv und gemappt hast, dann:
+  #      # - CAMUNDA_CLIENT_ZEEBE_RESTADDRESS=http://zeebe-gateway:8080
+  #      - LOGGING_LEVEL_ROOT=INFO
+  #      - ZEEBE_CLIENT_SECURITY_PLAINTEXT=true
+  #      - ZEEBE_CLIENT_CLOUD_ENABLED=false
+  #      - LOGGING_LEVEL_IO_CAMUNDA_ZEEBE_CLIENT_IMPL=ERROR
+  #    depends_on:
+  #      zeebe-gateway:
+  #        condition: service_healthy
+  #    restart: "no"
+  #    networks:
+  #      - camunda-platform
 
-      restart: "no"
-      networks:
-        - camunda-platform
+  c8-experiment_new:
+    container_name: c8-experiment_new
+    #      image: moritz148/multiple-broker:test
+    image: moritz148/multiple-broker:topology
+    environment:
+      - CAMUNDA_CLIENT_MODE=self-managed
+      - CAMUNDA_CLIENT_ZEEBE_GRPCADDRESS=http://zeebe-gateway:26500
+      # Falls du das Zeebe REST Gateway aktiv und gemappt hast, dann:
+      # - CAMUNDA_CLIENT_ZEEBE_RESTADDRESS=http://zeebe-gateway:8080
+      - LOGGING_LEVEL_ROOT=INFO
+      - ZEEBE_CLIENT_SECURITY_PLAINTEXT=true
+      - ZEEBE_CLIENT_CLOUD_ENABLED=false
+      - LOGGING_LEVEL_IO_CAMUNDA_ZEEBE_CLIENT_IMPL=ERROR
+    depends_on:
+      zeebe-gateway:
+        condition: service_healthy
+    restart: "no"
+    networks:
+      - camunda-platform
+
 
   zeebe0: # https://docs.camunda.io/docs/self-managed/platform-deployment/docker/#zeebe
     #    image: camunda/zeebe:${CAMUNDA_ZEEBE_VERSION}
     image: camunda/zeebe:8.7.8
     container_name: zeebe0
-    #    volumes:
-    #      - ./config/zeebe/broker-0.yaml:/usr/local/zeebe/config/application.yaml:ro
+#    volumes:
+#      - ./config/zeebe/broker-0.yaml:/usr/local/zeebe/config/application.yaml:ro
     #      - zeebe0:/usr/local/zeebe/data
     environment:
       - ZEEBE_LOG_LEVEL=info
@@ -49,6 +75,10 @@ services:
       - ZEEBE_BROKER_DATA_DISKUSAGEREPLICATIONWATERMARK=0.999
       - ZEEBE_BROKER_THREADS_CPUTHREADCOUNT=2
       - ZEEBE_BROKER_THREADS_IOTHREADCOUNT=2
+      - ZEEBE_BROKER_NETWORK_MONITORINGAPI_HOST=0.0.0.0
+      - ZEEBE_BROKER_NETWORK_MONITORINGAPI_PORT=9600
+      - MANAGEMENT_SERVER_ADDRESS=0.0.0.0
+      - MANAGEMENT_SERVER_PORT=9600
       - "JAVA_TOOL_OPTIONS=-Xms512m -Xmx512m"
     restart: unless-stopped
     #    healthcheck:
@@ -62,7 +92,7 @@ services:
       interval: 15s
       timeout: 5s
       retries: 20
-      start_period: 120s
+      start_period: 150s
 
     networks:
       - camunda-platform
@@ -90,6 +120,10 @@ services:
       - ZEEBE_BROKER_DATA_DISKUSAGEREPLICATIONWATERMARK=0.999
       - ZEEBE_BROKER_THREADS_CPUTHREADCOUNT=2
       - ZEEBE_BROKER_THREADS_IOTHREADCOUNT=2
+      - ZEEBE_BROKER_NETWORK_MONITORINGAPI_HOST=0.0.0.0
+      - ZEEBE_BROKER_NETWORK_MONITORINGAPI_PORT=9601
+      - MANAGEMENT_SERVER_ADDRESS=0.0.0.0
+      - MANAGEMENT_SERVER_PORT=9601
       - "JAVA_TOOL_OPTIONS=-Xms512m -Xmx512m"
     restart: unless-stopped
     #    healthcheck:
@@ -99,15 +133,13 @@ services:
     #      retries: 20
     #      start_period: 120s
     healthcheck:
-      test: ["CMD-SHELL", "timeout 10s bash -c ':> /dev/tcp/127.0.0.1/9600' || exit 1"]
+      test: ["CMD-SHELL", "timeout 10s bash -c ':> /dev/tcp/127.0.0.1/9601' || exit 1"]
       interval: 15s
-      timeout: 5s
+      timeout: 10s
       retries: 20
-      start_period: 120s
-    depends_on:
-      - zeebe0
-    #    volumes:
-    #      - ./config/zeebe/broker-1.yaml:/usr/local/zeebe/config/application.yaml:ro
+      start_period: 150s
+#    volumes:
+#      - ./config/zeebe/broker-1.yaml:/usr/local/zeebe/config/application.yaml:ro
     #      - zeebe1:/usr/local/zeebe/data
     networks:
       - camunda-platform
@@ -136,6 +168,10 @@ services:
       - ZEEBE_BROKER_THREADS_CPUTHREADCOUNT=2
       - ZEEBE_BROKER_THREADS_IOTHREADCOUNT=2
       - "JAVA_TOOL_OPTIONS=-Xms512m -Xmx512m"
+      - ZEEBE_BROKER_NETWORK_MONITORINGAPI_HOST=0.0.0.0
+      - ZEEBE_BROKER_NETWORK_MONITORINGAPI_PORT=9602
+      - MANAGEMENT_SERVER_ADDRESS=0.0.0.0
+      - MANAGEMENT_SERVER_PORT=9602
     restart: unless-stopped
     #    healthcheck:
     #      test: [ "CMD-SHELL", "bash -lc 'echo > /dev/tcp/127.0.0.1/8080'" ]
@@ -144,15 +180,13 @@ services:
     #      retries: 20
     #      start_period: 120s
     healthcheck:
-      test: ["CMD-SHELL", "timeout 10s bash -c ':> /dev/tcp/127.0.0.1/9600' || exit 1"]
+      test: ["CMD-SHELL", "timeout 10s bash -c ':> /dev/tcp/127.0.0.1/9602' || exit 1"]
       interval: 15s
       timeout: 5s
       retries: 20
-      start_period: 120s
-    depends_on:
-      - zeebe1
-    #    volumes:
-    #      - ./config/zeebe/broker-2.yaml:/usr/local/zeebe/config/application.yaml:ro
+      start_period: 150s
+#    volumes:
+#      - ./config/zeebe/broker-2.yaml:/usr/local/zeebe/config/application.yaml:ro
     #      - zeebe2:/usr/local/zeebe/data
     networks:
       - camunda-platform
@@ -163,40 +197,36 @@ services:
     image: camunda/zeebe:8.7.8
     container_name: zeebe-gateway
     command: ["/usr/local/bin/startup.sh", "--", "gateway"]
-
-    #    volumes:
-    #      - ./config/zeebe/gateway.yaml:/usr/local/zeebe/config/application.yaml:ro
+#    volumes:
+#      - ./config/zeebe/gateway.yaml:/usr/local/zeebe/config/application.yaml:ro
     ports:
       - "26500:26500"   #gRPC for Clients
-      - "9600:9600"     #monitoring/health of gateway
+    #      - "9600:9600"     #monitoring/health of gateway
     environment:
-      - ZEEBE_GATEWAY_STANDALONE=true
-
-      # Logging
+      - ZEEBE_STANDALONE_GATEWAY=true
       - ZEEBE_LOG_LEVEL=info
-
-      # gRPC Gateway für Clients
-      - ZEEBE_GATEWAY_NETWORK_HOST=0.0.0.0
-      - ZEEBE_GATEWAY_NETWORK_PORT=26500
-
-      # Cluster-Verbindung zu den Brokern (immer der interne Cluster-Port 26502!)
-      - ZEEBE_GATEWAY_CLUSTER_INITIALCONTACTPOINTS=zeebe0:26502,zeebe1:26502,zeebe2:26502
-      - ZEEBE_GATEWAY_CLUSTER_CLUSTERNAME=zeebe-cluster
-
-      # Security für lokale Entwicklung aus
-      - ZEEBE_GATEWAY_SECURITY_AUTHENTICATION_MODE=none
-
-      # Management/Monitoring
       - ZEEBE_GATEWAY_MONITORING_ENABLED=true
       - ZEEBE_GATEWAY_MONITORING_HOST=0.0.0.0
       - ZEEBE_GATEWAY_MONITORING_PORT=9600
+      # gRPC Gateway für Clients
+      - ZEEBE_GATEWAY_NETWORK_HOST=0.0.0.0
+      - ZEEBE_GATEWAY_NETWORK_PORT=26500
+      # Cluster-Verbindung zu den Brokern (immer der interne Cluster-Port 26502!)
+      - ZEEBE_GATEWAY_CLUSTER_INITIALCONTACTPOINTS=zeebe0:26502,zeebe1:26502,zeebe2:26502
+      - ZEEBE_GATEWAY_CLUSTER_CLUSTERNAME=zeebe-cluster
+      # Security für lokale Entwicklung aus
+      - ZEEBE_GATEWAY_SECURITY_AUTHENTICATION_MODE=none
 
     healthcheck:
       test: [ "CMD-SHELL", "timeout 10s bash -c ':> /dev/tcp/127.0.0.1/9600' || exit 1" ]
+
     depends_on:
-      - zeebe0
-      - zeebe1
-      - zeebe2
+      zeebe0:
+        condition: service_healthy
+      zeebe1:
+        condition: service_healthy
+      zeebe2:
+        condition: service_healthy
     networks:
       - camunda-platform
 
