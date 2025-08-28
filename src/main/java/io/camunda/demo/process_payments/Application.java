@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import io.camunda.zeebe.client.ZeebeClient;
 import io.camunda.zeebe.spring.client.annotation.Deployment;
 import org.springframework.context.ConfigurableApplicationContext;
+import java.time.Instant;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -41,7 +42,7 @@ public class Application implements CommandLineRunner {
 		//Variable zum ändern der Anzahl der zu startenden Prozessinstanzen
 		int numberOfInstances = 100;
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+
 
         final Topology topology = zeebeClient.newTopologyRequest().send().join();
 
@@ -57,10 +58,17 @@ public class Application implements CommandLineRunner {
                                                     System.out.println(
                                                             "      " + p.getPartitionId() + " - " + p.getRole()));
                         });
-		for (int i = 1; i <= numberOfInstances; i++) {
-			String timestampStarted = LocalDateTime.now().format(formatter);
 
-			System.out.println("Instance #" + i + " STARTED - " + timestampStarted);
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+		for (int i = 1; i <= numberOfInstances; i++) {
+//			String timestampStarted = LocalDateTime.now().format(formatter);
+//
+//			System.out.println("Instance #" + i + " STARTED - " + timestampStarted);
+
+            Instant start = Instant.now();
+            long startMicros = start.getEpochSecond() * 1_000_000L + start.getNano() / 1_000;
+            System.out.println("Instance #" + i + " STARTED - " + startMicros);
+
 			zeebeClient.newCreateInstanceCommand()
 					.bpmnProcessId(bpmnProcessId)
 					.latestVersion()
@@ -68,9 +76,12 @@ public class Application implements CommandLineRunner {
 					.send()
 					.join();
 
-			String timestampEnded = LocalDateTime.now().format(formatter);
-			System.out.println("Instance #" + i + " DONE - " + timestampEnded);
+//			String timestampEnded = LocalDateTime.now().format(formatter);
+//			System.out.println("Instance #" + i + " DONE - " + timestampEnded);
+
+            Instant end = Instant.now();
+            long endMicros = end.getEpochSecond() * 1_000_000L + end.getNano() / 1_000;
+            System.out.println("Instance #" + i + " DONE - " + endMicros);
 		}
 	}
-
 }

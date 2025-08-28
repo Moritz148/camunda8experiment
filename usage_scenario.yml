@@ -15,4 +15,4 @@ flow:
       - type: console
         command: java -jar demo.jar
         log-stdout: true
-        log-stderr: true
+#        log-stderr: true
