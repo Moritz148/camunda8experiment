@@ -60,28 +60,31 @@ public class Application implements CommandLineRunner {
                         });
 
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
-		for (int i = 1; i <= numberOfInstances; i++) {
+
+        for (int i = 1; i <= numberOfInstances; i++) {
 //			String timestampStarted = LocalDateTime.now().format(formatter);
 //
 //			System.out.println("Instance #" + i + " STARTED - " + timestampStarted);
+            if(i==1) {
+                Instant start = Instant.now();
+                long startMicros = start.getEpochSecond() * 1_000_000L + start.getNano() / 1_000;
+                System.out.println("Instance #" + i + " STARTED - " + startMicros);
+            }
 
-            Instant start = Instant.now();
-            long startMicros = start.getEpochSecond() * 1_000_000L + start.getNano() / 1_000;
-            System.out.println("Instance #" + i + " STARTED - " + startMicros);
-
-			zeebeClient.newCreateInstanceCommand()
-					.bpmnProcessId(bpmnProcessId)
-					.latestVersion()
-					.withResult()
-					.send()
-					.join();
+            zeebeClient.newCreateInstanceCommand()
+                    .bpmnProcessId(bpmnProcessId)
+                    .latestVersion()
+                    .withResult()
+                    .send()
+                    .join();
 
 //			String timestampEnded = LocalDateTime.now().format(formatter);
 //			System.out.println("Instance #" + i + " DONE - " + timestampEnded);
-
-            Instant end = Instant.now();
-            long endMicros = end.getEpochSecond() * 1_000_000L + end.getNano() / 1_000;
-            System.out.println("Instance #" + i + " DONE - " + endMicros);
+            if(i==100){
+                Instant end = Instant.now();
+                long endMicros = end.getEpochSecond() * 1_000_000L + end.getNano() / 1_000;
+                System.out.println("Instance #" + i + " DONE - " + endMicros);
+            }
 		}
 	}
 }
