@@ -29,10 +29,9 @@ services:
       - camunda-platform
 
   my-process: # Dein Prozess-Service
-    image: moritz148/camunda8experiment:benchmark # Hier das Image deiner JAR-Datei
+#    image: moritz148/camunda8experiment:benchmark # Hier das Image deiner JAR-Datei
+    image: moritz148/multiple-broker:logging # Hier das Image deiner JAR-Datei
     container_name: c8-experiment
-    environment:
-      - ZEEBE_GATEWAY_ADDRESS=zeebe:26500  # Verbindung zur Zeebe-Engine
     networks:
       - camunda-platform  # Das gleiche Netzwerk wie Zeebe
     depends_on:

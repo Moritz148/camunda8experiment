@@ -16,10 +16,11 @@ import java.time.format.DateTimeFormatter;
 @Deployment(resources = "classpath:C8_benchmark.bpmn")
 public class Application implements CommandLineRunner {
 
-	private ZeebeClient zeebeClient = ZeebeClient.newClientBuilder()
-			.gatewayAddress("zeebe-gateway:26500")
-			.usePlaintext()
-			.build();
+	private ZeebeClient zeebeClient;
+
+    public Application(ZeebeClient zeebeClient) {
+        this.zeebeClient = zeebeClient;
+    }
 
 	public static void main(String[] args) {
 		//Spring-Application starten
@@ -40,7 +41,7 @@ public class Application implements CommandLineRunner {
 		var bpmnProcessId = "C8_benchmark";
 
 		//Variable zum ändern der Anzahl der zu startenden Prozessinstanzen
-		int numberOfInstances = 100;
+		int numberOfInstances = 1000;
 
 
 
@@ -80,7 +81,7 @@ public class Application implements CommandLineRunner {
 
 //			String timestampEnded = LocalDateTime.now().format(formatter);
 //			System.out.println("Instance #" + i + " DONE - " + timestampEnded);
-            if(i==100){
+            if(i==numberOfInstances){
                 Instant end = Instant.now();
                 long endMicros = end.getEpochSecond() * 1_000_000L + end.getNano() / 1_000;
                 System.out.println("Instance #" + i + " DONE - " + endMicros);
