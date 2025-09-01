@@ -28,10 +28,10 @@ services:
     networks:
       - camunda-platform
 
-  my-process: # Dein Prozess-Service
+  experiment: # Dein Prozess-Service
 #    image: moritz148/camunda8experiment:benchmark # Hier das Image deiner JAR-Datei
     image: moritz148/multiple-broker:logging # Hier das Image deiner JAR-Datei
-    container_name: c8-experiment
+    container_name: experiment
     networks:
       - camunda-platform  # Das gleiche Netzwerk wie Zeebe
     depends_on:
