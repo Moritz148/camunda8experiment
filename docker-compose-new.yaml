@@ -28,8 +28,8 @@ services:
   #    networks:
   #      - camunda-platform
 
-  c8-experiment_new:
-    container_name: c8-experiment_new
+  experiment:
+    container_name: experiment
     #      image: moritz148/multiple-broker:test
 #    image: moritz148/multiple-broker:topology
     image: moritz148/measurementsgmt:c8
