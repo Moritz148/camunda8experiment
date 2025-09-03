@@ -13,7 +13,6 @@ flow:
     container: experiment
     commands:
       - type: console
-        command: > 
-          java -cp /app/resources:/app/classes:/app/libs/* org.springframework.boot.loader.launch.JarLauncher
+        command: java -jar demo.jar
         log-stdout: true
-        log-stderr: true
+#        log-stderr: true
