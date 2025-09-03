@@ -13,6 +13,6 @@ flow:
     container: experiment
     commands:
       - type: console
-        command: java -version
+        command: java
     log-stdout: true
     log-stderr: true
