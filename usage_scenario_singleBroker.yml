@@ -12,7 +12,7 @@ flow:
   - name: experiment-c8
     container: experiment
     commands:
-#      - type: console
-#        command: java -cp de/envite/measurementsgmt/MeasurementsGmtApplication.java
+      - type: console
+        command: java -version
     log-stdout: true
     log-stderr: true
