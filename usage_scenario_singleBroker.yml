@@ -4,15 +4,15 @@ description: usage_scenario for camunda8experiment
 
 compose-file: !include docker-compose.yaml
 
-services:
-  experiment:
-    command: /bin/sh
+#services:
+#  experiment:
+#    command: /bin/sh
 
 flow:
   - name: experiment-c8
     container: experiment
-    commands:
-      - type: console
-        command: java -jar demo.jar
-        log-stdout: true
-#        log-stderr: true
+#    commands:
+#      - type: console
+#        command: java -cp de/envite/measurementsgmt/MeasurementsGmtApplication.java
+    log-stdout: true
+    log-stderr: true
