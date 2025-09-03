@@ -9,7 +9,7 @@ services:
     command: /bin/sh
 
 flow:
-  - name: experiment
+  - name: experiment-c8
     container: experiment
     commands:
       - type: console

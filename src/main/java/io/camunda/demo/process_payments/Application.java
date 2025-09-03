@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @SpringBootApplication
-@Deployment(resources = "classpath:C8_benchmark.bpmn")
+//@Deployment(resources = "classpath:C8_benchmark.bpmn")
 public class Application implements CommandLineRunner {
 
 	private ZeebeClient zeebeClient;
@@ -29,6 +29,13 @@ public class Application implements CommandLineRunner {
 		//Spring-Application schließen
 		ctx.close();
 	}
+//    private void deployBPMN(){
+//        zeebeClient.newDeployResourceCommand()
+//                .addResourceFromClasspath("C8_benchmark.bpmn")
+//                .send()
+//                .join()
+//        System.out.println("Deployed BPMN process!");
+//    }
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -42,8 +49,6 @@ public class Application implements CommandLineRunner {
 
 		//Variable zum ändern der Anzahl der zu startenden Prozessinstanzen
 		int numberOfInstances = 1000;
-
-
 
         final Topology topology = zeebeClient.newTopologyRequest().send().join();
 
@@ -62,6 +67,8 @@ public class Application implements CommandLineRunner {
 
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
 
+//        deployBPMN();
+
         for (int i = 1; i <= numberOfInstances; i++) {
 //			String timestampStarted = LocalDateTime.now().format(formatter);
 //
@@ -70,14 +77,15 @@ public class Application implements CommandLineRunner {
                 Instant start = Instant.now();
                 long startMicros = start.getEpochSecond() * 1_000_000L + start.getNano() / 1_000;
                 System.out.println("Instance #" + i + " STARTED - " + startMicros);
+                zeebeClient.newCreateInstanceCommand()
+                        .bpmnProcessId(bpmnProcessId)
+                        .latestVersion()
+                        .withResult()
+                        .send()
+                        .join();
             }
 
-            zeebeClient.newCreateInstanceCommand()
-                    .bpmnProcessId(bpmnProcessId)
-                    .latestVersion()
-                    .withResult()
-                    .send()
-                    .join();
+
 
 //			String timestampEnded = LocalDateTime.now().format(formatter);
 //			System.out.println("Instance #" + i + " DONE - " + timestampEnded);

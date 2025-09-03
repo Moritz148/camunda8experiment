@@ -32,7 +32,8 @@ services:
     container_name: c8-experiment_new
     #      image: moritz148/multiple-broker:test
 #    image: moritz148/multiple-broker:topology
-    image: moritz148/multiple-broker:logging
+    image: moritz148/measurementsgmt:c8
+  #    image: moritz148/multiple-broker:logging
     environment:
       - CAMUNDA_CLIENT_MODE=self-managed
       - CAMUNDA_CLIENT_ZEEBE_GRPCADDRESS=http://zeebe-gateway:26500
