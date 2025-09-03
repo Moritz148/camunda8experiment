@@ -11,7 +11,7 @@ compose-file: !include docker-compose.yaml
 flow:
   - name: experiment-c8
     container: experiment
-#    commands:
+    commands:
 #      - type: console
 #        command: java -cp de/envite/measurementsgmt/MeasurementsGmtApplication.java
     log-stdout: true
