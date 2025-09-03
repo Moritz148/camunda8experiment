@@ -232,10 +232,10 @@ services:
     networks:
       - camunda-platform
 
-volumes:
-  zeebe0:
-  zeebe1:
-  zeebe2:
+#volumes:
+#  zeebe0:
+#  zeebe1:
+#  zeebe2:
 
 networks:
   camunda-platform:
