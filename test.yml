@@ -16,6 +16,6 @@ flow:
         command: curl -L 'http://zeebe:26500/v2/process-instances' \
         -H 'Content-Type: application/json' \
         -H 'Accept: application/json' \
-        -d '{"processDefinitionId": "C8_benchmark"}'
+        -d "processDefinitionId": "C8_benchmark"
         log-stdout: true
 #        log-stderr: true
