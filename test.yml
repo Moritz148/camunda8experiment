@@ -1,0 +1,21 @@
+name: camunda8experiment
+author: Moritz Schwarz <moritz.schwarz@envite.de>
+description: usage_scenario for camunda8experiment
+
+compose-file: !include docker-compose.yaml
+
+services:
+  experiment:
+    command: /bin/sh
+
+flow:
+  - name: experiment
+    container: experiment
+    commands:
+      - type: console
+        command: curl -L 'http://zeebe:26500/v2/process-instances' \
+        -H 'Content-Type: application/json' \
+        -H 'Accept: application/json' \
+        -d '{"processDefinitionId": "C8_benchmark"}'
+        log-stdout: true
+#        log-stderr: true
